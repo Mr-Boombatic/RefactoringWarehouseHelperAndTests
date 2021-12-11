@@ -1,0 +1,118 @@
+﻿<UserControl x:Class="WarehouseHelper.Veiw.StoneWarehouse"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        mc:Ignorable="d" MinHeight="1000" MinWidth="1500">
+    <Grid>
+        <TabControl>
+            <TabItem Header="Склад камней">
+                <Grid>
+                    <DataGrid Grid.Column="1" ItemsSource="{Binding StoneWarehouse}"  Style="{StaticResource PreviewWarehouse}">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="№ камня" Binding="{Binding StoneId}" />
+                            <DataGridTextColumn Header="Стоймость камня" Binding="{Binding StoneCost }" />
+                            <DataGridTextColumn Header="Обьем" Binding="{Binding Volume}" />
+                            <DataGridTextColumn Header="Площадь" Binding="{Binding Square}" />
+                            <DataGridTextColumn Header="Периметр" Binding="{Binding Perimeter}" />
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Добавить">
+                <Grid Background="LightGray">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="285"/>
+                        <ColumnDefinition Width="89*"/>
+                        <ColumnDefinition Width="4*"/>
+                    </Grid.ColumnDefinitions>
+
+                    <Grid Grid.Column="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="50"/>
+                            <RowDefinition Height="35"/>
+                        </Grid.RowDefinitions>
+                        <DatePicker Grid.Column="1" Text="{Binding Path=Car.Date}" HorizontalAlignment="Stretch" Margin="5" VerticalAlignment="Center" Width="auto" >
+                            <DatePicker.Resources>
+                                <SolidColorBrush x:Key="PrimaryHueMidBrush" Color="Gray" />
+                                <SolidColorBrush x:Key="MaterialDesignBody" Color="Black" />
+                            </DatePicker.Resources>
+                        </DatePicker>
+                        <TextBlock HorizontalAlignment="Stretch" Margin="5" TextAlignment="Right" Text="Дата:" VerticalAlignment="Center" Width="auto" FontSize="14"/>
+
+                        <TextBlock HorizontalAlignment="Stretch" Grid.Row="1" Margin="5" TextAlignment="Right" Text="Поставщик услуг:" VerticalAlignment="Center" Width="auto" FontSize="14"/>
+                        <ComboBox Grid.Row="1" Grid.Column="1" Margin="5" HorizontalContentAlignment="Left" VerticalAlignment="Bottom"  Width="auto">
+                            <TextBlock>Сегежа</TextBlock>
+                            <TextBlock>Кондопога</TextBlock>
+                            <Separator  />
+                            <TextBlock>Добавить</TextBlock>
+                        </ComboBox>
+
+                        <TextBlock  HorizontalAlignment="Stretch" Grid.Row="2" Margin="5" TextAlignment="Right" Text="Стоимость доставки:" VerticalAlignment="Center" Width="auto" FontSize="14"/>
+                        <TextBox PreviewTextInput="PreviewTextInput" DataObject.Pasting="TextBoxPasting" Name="CostPerCar" VerticalContentAlignment="Bottom" HorizontalContentAlignment="Left" Grid.Row="2" Grid.Column="1" Margin="5" TextAlignment="Right" VerticalAlignment="Center" Width="auto" FontSize="14" GotFocus="CostPerCar_GotFocus">
+                            <TextBox.Text>
+                                <Binding StringFormat="{}{0:C}" Path="CarCost" Mode="TwoWay" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <ExceptionValidationRule />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox.Text>
+                        </TextBox>
+
+                        <Button Content="Добавить" Margin="0,10,5,-7" Grid.Row="3" Command="{Binding AddStonesToWarehouseCommand}" HorizontalAlignment="Right" Grid.Column="1"/>
+                    </Grid>
+
+                    <DataGrid SelectedItem="{Binding SelectedOrder}" Name="order" AutoGenerateColumns="False" Grid.Column="1" ItemsSource="{Binding Orders}"  Margin="0" CanUserAddRows="False" ColumnWidth="*" HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="№ Блока" Binding="{Binding StoneId}" IsReadOnly="True"/>
+                            <DataGridTemplateColumn Header="Тип гранита" MaxWidth="200">
+                                <!--<DataGridTemplateColumn.CellEditingTemplate>
+                                    <DataTemplate>
+                                        <ComboBox SelectedItem="{Binding Type}">
+                                            <TextBlock>габро</TextBlock>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellEditingTemplate>-->
+                                <DataGridTemplateColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <ComboBox SelectedValuePath="Text" SelectedValue="{Binding Type}" HorizontalContentAlignment="Left">
+                                            <TextBlock>Габро</TextBlock>
+                                            <TextBlock>Дымовский</TextBlock>
+                                            <TextBlock>Капустинский</TextBlock>
+                                            <Separator  />
+                                            <TextBlock>Добавить</TextBlock>
+                                        </ComboBox>
+                                    </DataTemplate>
+                                </DataGridTemplateColumn.CellTemplate>
+                            </DataGridTemplateColumn>
+                            <DataGridTextColumn Header="Длина" Binding="{Binding Length, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn Header="Ширина" Binding="{Binding Width, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn Header="Высота" Binding="{Binding Height, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn Header="Обьем" Binding="{Binding Volume, Mode=OneWay}"/>
+                            <DataGridTextColumn Header="Цена" Binding="{Binding PricePerCube, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                            <DataGridTextColumn Header="Стоимость" Binding="{Binding Cost, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        </DataGrid.Columns>
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="CurrentCellChanged">
+                                <i:InvokeCommandAction 
+                Command="{Binding ChangeCommand}" />
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </DataGrid>
+                    <WrapPanel Orientation="Vertical" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center">
+                        <Button Content="+" Grid.Column="2" Margin="5" Height="40" Width="40" FontSize="25" Command="{Binding AddRowCommand}"/>
+                        <Button Content="-" Grid.Column="2" Margin="5" Height="40" Width="40" FontSize="25"  Command="{Binding DeleteRowCommand}"/>
+                    </WrapPanel>
+
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>

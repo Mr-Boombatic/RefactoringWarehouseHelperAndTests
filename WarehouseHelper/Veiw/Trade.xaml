@@ -1,0 +1,111 @@
+﻿<UserControl x:Class="WarehouseHelper.Veiw.Trade"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:WarehouseHelper.Veiw" 
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+
+    </UserControl.Resources>
+    <Grid Background="LightGray">
+
+        <TabControl>
+            <TabItem Header="В наличии">
+                <DataGrid AutoGenerateColumns="False" Style="{StaticResource PreviewWarehouse}" ItemsSource="{Binding Sales, Mode=OneWay}" CanUserAddRows="False" Margin="5,0,0,0" ColumnWidth="*" HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Номер договора" Binding="{Binding ContractNumber}"/>
+                        <DataGridTextColumn Header="Покупатель" Binding="{Binding Name}"/>
+                        <DataGridTextColumn Header="Стоимсть" Binding="{Binding Cost}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </TabItem>
+            <TabItem Header="Продать">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="120"/>
+                        <RowDefinition />
+                        <RowDefinition Height="100"/>
+                    </Grid.RowDefinitions>
+                    <WrapPanel Grid.Row="2" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,28,0,0" Width="230">
+                        <TextBlock  Text="Номер договра:"  TextWrapping="Wrap" FontWeight="Bold"/>
+                        <TextBox Text="{Binding AddedSale.ContractNumber}" Grid.Row="2" Width="100" Height="25"/>
+                    </WrapPanel>
+                    <Button Content="Применить" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Bottom" Margin="0,0,0,2" Width="117" Height="35" FontWeight="Normal" Command="{Binding SellProductsCommand}"/>
+                    <!--<WrapPanel HorizontalAlignment="Center" Margin="0,0,85,0" VerticalAlignment="Top"  Grid.Row="2">
+                        <TextBlock HorizontalAlignment="Center" Text="Итоговая стоимость:" TextWrapping="Wrap" VerticalAlignment="Top" FontFamily="Bahnschrift Condensed" FontWeight="Normal" Foreground="#DD9E5555" />
+                        <TextBlock Text="{Binding ResultCost}" Grid.Row="2" />
+                    </WrapPanel>-->
+                    <Grid Grid.Row="1" >
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="40"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+
+
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" Grid.Column="0">
+                            <Label Content="На продажу" Margin="0" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Top" FontWeight="Bold" FontFamily="Arial Black" Foreground="#FFB66E6E" />
+                            <DataGrid AutoGenerateColumns="False" SelectedItem="{Binding SelectedProduct}" Style="{StaticResource PreviewWarehouse}" ItemsSource="{Binding ProductSold, Mode=OneWay}" CanUserAddRows="False" Margin="5,0,0,0" ColumnWidth="*" HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Продукт" Binding="{Binding Name}"/>
+                                    <DataGridTextColumn Header="Площадь" Binding="{Binding Square}"/>
+                                    <DataGridTextColumn Header="Обьем" Binding="{Binding Volume}"/>
+                                    <DataGridTextColumn Header="Стоимсть" Binding="{Binding Cost}"/>
+                                </DataGrid.Columns>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseDoubleClick">
+                                        <i:InvokeCommandAction 
+                Command="{Binding RemoveFromSaleCommand}"/>
+                                        <!--CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGrid}}, Path=SelectedValue}"-->
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </DataGrid>
+                        </StackPanel>
+
+                        <StackPanel Orientation="Vertical" VerticalAlignment="Stretch" Grid.Column="2">
+                            <Label Content="Склад готовой продукции" Margin="0" FontSize="15" HorizontalAlignment="Center" VerticalAlignment="Top" FontWeight="Bold" FontFamily="Arial Black" Foreground="#FFB66E6E"/>
+                            <DataGrid AutoGenerateColumns="False" SelectedItem="{Binding SelectedProduct}" Style="{StaticResource PreviewWarehouse}" ItemsSource="{Binding RemainingInStock}" CanUserAddRows="False" Margin="0,0,5,0" ColumnWidth="*" HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Продукт" Binding="{Binding Name}"/>
+                                    <DataGridTextColumn Header="Площадь" Binding="{Binding Square}"/>
+                                    <DataGridTextColumn Header="Обьем" Binding="{Binding Volume}"/>
+                                    <DataGridTextColumn Header="Стоимсть" Binding="{Binding Cost}"/>
+                                </DataGrid.Columns>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseDoubleClick">
+                                        <i:InvokeCommandAction 
+                Command="{Binding AddForSaleCommand}"/>
+                                        <!--CommandParameter="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type DataGrid}}, Path=SelectedValue}"-->
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </DataGrid>
+                        </StackPanel>
+                    </Grid>
+
+
+
+                    <Grid HorizontalAlignment="Stretch">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="0"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <WrapPanel Orientation="Horizontal" Grid.Column="1" Width="267" HorizontalAlignment="Left">
+                            <TextBlock Text="Контактная информация о покупателе" Grid.Column="1" TextAlignment="Left" Width="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type WrapPanel}}, Path=Width, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" FontFamily="Bahnschrift Condensed" FontWeight="Normal" Foreground="#DD9E5555" />
+                            <TextBlock HorizontalAlignment="Right" Margin="38,0,0,0" Text="Покупатель:" Height="30" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                            <TextBox Text="{Binding AddedSale.Name}" VerticalAlignment="Top" HorizontalContentAlignment="Left" VerticalContentAlignment="Bottom"  Height="30" Width="130"/>
+                            <TextBlock HorizontalAlignment="Right"  Text="Номер телефона:" Height="30" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                            <TextBox Text="{Binding AddedSale.Phone}" VerticalAlignment="Center" HorizontalContentAlignment="Left" VerticalContentAlignment="Bottom" Height="30" Width="130"/>
+                            <TextBlock HorizontalAlignment="Right" Margin="86,0,0,0" Text="Email:" Height="30" TextWrapping="Wrap" VerticalAlignment="Top"/>
+                            <TextBox Text="{Binding AddedSale.Email}" VerticalAlignment="Top" HorizontalContentAlignment="Left" VerticalContentAlignment="Bottom"  Height="30" Width="130"/>
+                        </WrapPanel>
+                    </Grid>
+
+                </Grid>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</UserControl>
