@@ -13,6 +13,9 @@ namespace WarehouseHelper
         {
             Stones = new HashSet<Stone>();
         }
+
+
+        private RelayCommand selectWarehouse;
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int CarId { get; set; }

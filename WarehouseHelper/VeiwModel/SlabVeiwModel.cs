@@ -16,7 +16,7 @@ namespace WarehouseHelper.VeiwModel
     {
         StoneСompanyContext db;
         public ArrayList PreviewWarehouseSlabs { get; set; } = new ArrayList();
-        public ObservableCollection<Slab> SawingStone { get; set; } = new ObservableCollection<Slab>();
+        public ObservableCollection<Slab> Slabs { get; set; } = new ObservableCollection<Slab>();
         public ObservableCollection<Stone> WarehouseStones { get; set; } = new ObservableCollection<Stone>();
         public Worker Worker { get; set; } = new Worker();
         public Stone SelectedStone { get; set; }
@@ -36,9 +36,9 @@ namespace WarehouseHelper.VeiwModel
 
                     // forming resulted slabs
                     List<Slab> slabs = new List<Slab>();
-                    foreach (var slab in SawingStone)
+                    foreach (var slab in Slabs)
                     {
-                        if (Worker == null)
+                        if (Worker.IsValid())
                         {
                             MessageBox.Show("Не указан работник!", "Распил", MessageBoxButton.OK, MessageBoxImage.Error);
                             return;
@@ -62,9 +62,10 @@ namespace WarehouseHelper.VeiwModel
                         overallVolume += slab.Width * slab.Length * slab.Height * slab.Count;
                     }
 
-                    if (overallVolume > stone.Width * stone.Length * stone.Height)
+                    string text;
+                    if ((text = overallVolume.VerificationOverallVolume(stone.Length * stone.Width * stone.Height)) != "OK")
                     {
-                        MessageBox.Show("Обьем камня меньше суммы обьема слэбов полученных из него!", "Распил", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show(text, "Распил", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
 
@@ -115,6 +116,29 @@ namespace WarehouseHelper.VeiwModel
         {
             if (PropertyChanged != null)
                 PropertyChanged(this, new PropertyChangedEventArgs(prop));
+        }
+    }
+
+    public static class ExtensionsDouble
+    {
+        public static string VerificationOverallVolume(this double overralVolume, double stoneVolume)
+        {
+            if (overralVolume < 0)
+                return "Обьем для слэбов не может быть отрицательным!";
+            if (stoneVolume < 0)
+                return "Обьем для камня не может быть отрицательным!";
+            if (overralVolume > stoneVolume)
+                return "Обьем для слэбов не может быть больше обьема камня!";
+
+            return "OK";
+        }
+    }
+
+    public static class ExtensionsWorker
+    {
+        public static bool IsValid(this Worker worker)
+        {
+            return worker.Date != null && !string.IsNullOrEmpty(worker.Name) && !string.IsNullOrEmpty(worker.Shift.Text);
         }
     }
 

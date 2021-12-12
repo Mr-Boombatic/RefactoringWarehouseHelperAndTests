@@ -27,17 +27,18 @@ namespace WarehouseHelper.VeiwModel
             }
         }
 
-        private RelayCommand selectWarehouse;
+        DbContextOptions<StoneСompanyContext> Options { get; set; } = new DbContextOptionsBuilder<StoneСompanyContext>()
+            .UseSqlServer(@"Server=DESKTOP-GJHHNV9\SQLEXPRESS;Database=StoneСompany;Trusted_Connection=True;")
+            .Options;
+
+        private RelayCommand selectedVeiw;
         public RelayCommand SelectStoneWarehouseCommand
         {
             get
             {
-                return (selectWarehouse = new RelayCommand(obj =>
+                return (selectedVeiw = new RelayCommand(obj =>
                 {
-                    using (var context = new StoneСompanyContext(Options))
-                    {
-                        SelectedWarehouse = new StoneWarehouse(context);
-                    };
+                    SelectedWarehouse = new StoneWarehouse(new StoneСompanyContext(Options));
                 }));
             }
         }
@@ -45,12 +46,9 @@ namespace WarehouseHelper.VeiwModel
         {
             get
             {
-                return (selectWarehouse = new RelayCommand(obj =>
+                return (selectedVeiw = new RelayCommand(obj =>
                 {
-                    using (var context = new StoneСompanyContext(Options))
-                    {
-                        SelectedWarehouse = new SlabWearehouse(context);
-                    }
+                    SelectedWarehouse = new SlabWearehouse(new StoneСompanyContext(Options));
                 }));
             }
         }
@@ -59,7 +57,7 @@ namespace WarehouseHelper.VeiwModel
         {
             get
             {
-                return (selectWarehouse = new RelayCommand(obj =>
+                return (selectedVeiw = new RelayCommand(obj =>
                 {
                     using (var context = new StoneСompanyContext(Options))
                     {
@@ -73,7 +71,7 @@ namespace WarehouseHelper.VeiwModel
         //{
         //    get
         //    {
-        //        return (selectWarehouse = new RelayCommand(obj =>
+        //        return (selectedVeiw = new RelayCommand(obj =>
         //        {
         //            SelectedWarehouse = new Veiw.Product();
         //        }));
@@ -84,23 +82,16 @@ namespace WarehouseHelper.VeiwModel
         //{
         //    get
         //    {
-        //        return (selectWarehouse = new RelayCommand(obj =>
+        //        return (selectedVeiw = new RelayCommand(obj =>
         //        {
         //            SelectedWarehouse = new Trade();
         //        }));
         //    }
         //}
 
-        DbContextOptions<StoneСompanyContext> Options { get; set; } = new DbContextOptionsBuilder<StoneСompanyContext>()
-            .UseSqlServer(@"Server=DESKTOP-8UCPGM6;Database=StoneСompany;Trusted_Connection=True;")
-            .Options;
-
         public MainWindowVeiwModel()
         {
-            using (var context = new StoneСompanyContext(Options)) 
-            {
-                SelectedWarehouse = new StoneWarehouse(context);
-            };
+            SelectedWarehouse = new StoneWarehouse(new StoneСompanyContext(Options));
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

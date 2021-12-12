@@ -19,8 +19,20 @@ namespace WarehouseHelper.Tests
         public void TestInitialize()
         {
             context = new SqliteStoneCompanyContextTest();
+
         }
 
+
+        /// <summary>
+        /// this method checks the correctness of the recalculation of the cost
+        /// when the number of stones and cars is equal to 1.
+        /// </summary>
+        /// <remarks>
+        /// Defined stone parametrs:
+        /// Height = 10, Width = 10, Length = 10, PricePerCube = 1.
+        /// Defined car parametrs:
+        /// Cost = 100
+        /// </remarks>
         [TestMethod]
         public void RecountCost_1StoneAnd1Car_1100ReturnedCostForEach()
         {
@@ -30,7 +42,7 @@ namespace WarehouseHelper.Tests
             // Act
             veiwModel.Car = new Car() { Cost = 100 };
             var mediator = new ManagerMediator(veiwModel.Car);
-            veiwModel.Orders.Add(new Order(mediator)
+            veiwModel.Order.Add(new OrderedStone(mediator)
             {
                 Height = 10,
                 Width = 10,
@@ -39,11 +51,9 @@ namespace WarehouseHelper.Tests
             });
             // Assert
 
-            _ = veiwModel.AddStonesToWarehouseCommand;
-
             // stone cost value is calculated everytime for veiw
             // when i was making it me seemed logical \_(-__-)_/
-            Assert.AreEqual(1100, context.Stones.ToList()[0]);
+            Assert.AreEqual(1100, veiwModel.Order[0].Cost);
         }
 
         [TestMethod]
@@ -53,8 +63,9 @@ namespace WarehouseHelper.Tests
             StoneVeiwModel veiwModel = new StoneVeiwModel(context);
 
             // Act
-            var mediator = new ManagerMediator(new Car() { Cost = 100 });
-            var orderTest = new Order(mediator)
+            veiwModel.Car.Cost = 100;
+            var mediator = new ManagerMediator(veiwModel.Car);
+            var orderTest = new OrderedStone(mediator)
             {
                 Height = 10,
                 Width = 10,
@@ -63,10 +74,10 @@ namespace WarehouseHelper.Tests
             };
 
             for (int i = 0; i < 3; i++)
-                veiwModel.Orders.Add((Order)orderTest.Clone());
+                veiwModel.Order.Add((OrderedStone)orderTest.Clone());
 
             // Assert
-            veiwModel.Orders.ToList().ForEach(order =>
+            veiwModel.Order.ToList().ForEach(order =>
             {
                 if (order.Cost != 1025)
                     Assert.Fail();
@@ -80,8 +91,8 @@ namespace WarehouseHelper.Tests
             var veiwModel = new StoneVeiwModel(context);
 
             // Act
-            var mediator = new ManagerMediator(new Car() { Cost = 0 });
-            var orderTest = new Order(mediator)
+            var mediator = new ManagerMediator(veiwModel.Car);
+            var orderTest = new OrderedStone(mediator)
             {
                 Height = 10,
                 Width = 10,
@@ -90,10 +101,10 @@ namespace WarehouseHelper.Tests
             };
 
             for (int i = 0; i < 3; i++)
-                veiwModel.Orders.Add((Order)orderTest.Clone());
+                veiwModel.Order.Add((OrderedStone)orderTest.Clone());
 
             // Assert
-            veiwModel.Orders.ToList().ForEach(order =>
+            veiwModel.Order.ToList().ForEach(order =>
             {
                 if (order.Cost != 1000)
                     Assert.Fail();
@@ -107,8 +118,8 @@ namespace WarehouseHelper.Tests
             var veiwModel = new StoneVeiwModel(context);
 
             // Act
-            var mediator = new ManagerMediator(new Car() { Cost = 0 });
-            veiwModel.Orders.Add(new Order(mediator)
+            var mediator = new ManagerMediator(veiwModel.Car);
+            veiwModel.Order.Add(new OrderedStone(mediator)
             {
                 Height = 10,
                 Width = 10,
@@ -117,9 +128,116 @@ namespace WarehouseHelper.Tests
             });
 
             // Assert
-            Assert.AreEqual(1000, veiwModel.Orders[0].Cost);
+            Assert.AreEqual(1000, veiwModel.Order[0].Cost);
         }
 
+        // Negative tests
+
+        [TestMethod]
+        public void RecalculationCost_NegativeVolume_Exception()
+        {
+            // Arrange
+            var veiwModel = new StoneVeiwModel(context);
+
+            // Act
+            var mediator = new ManagerMediator(veiwModel.Car);
+            veiwModel.Order.Add(new OrderedStone(mediator)
+            {
+                Height = 10,
+                Width = -10,
+                Length = 10,
+                PricePerCube = 1
+            });
+
+            // Assert
+            Assert.AreEqual(0, veiwModel.Order[0].Cost);
+            Assert.AreEqual(true, System.Windows.Interop.ComponentDispatcher.IsThreadModal);
+        }
+
+        [TestMethod]
+        public void RecalculationCost_NegativeWidthAndLength_Exception()
+        {
+            // Arrange
+            var veiwModel = new StoneVeiwModel(context);
+
+            // Act
+            var mediator = new ManagerMediator(veiwModel.Car);
+            veiwModel.Order.Add(new OrderedStone(mediator)
+            {
+                Height = 10,
+                Width = -10,
+                Length = -10,
+                PricePerCube = 1
+            });
+
+            // Assert
+            Assert.AreEqual(0, veiwModel.Order[0].Cost);
+            Assert.AreEqual(true, System.Windows.Interop.ComponentDispatcher.IsThreadModal);
+        }
+
+        [TestMethod]
+        public void RecalculationCost_NegativePricePerCube_Exception()
+        {
+            // Arrange
+            var veiwModel = new StoneVeiwModel(context);
+
+            // Act
+            var mediator = new ManagerMediator(veiwModel.Car);
+            veiwModel.Order.Add(new OrderedStone(mediator)
+            {
+                Height = 10,
+                Width = 10,
+                Length = 10,
+                PricePerCube = -1
+            });
+
+            // Assert
+            Assert.AreEqual(0, veiwModel.Order[0].Cost);
+            Assert.AreEqual(true, System.Windows.Interop.ComponentDispatcher.IsThreadModal);
+        }
+
+        [TestMethod]
+        public void RecalculationCost_NegativePricePerCubeAndParamsOfStone_Exception()
+        {
+            // Arrange
+            var veiwModel = new StoneVeiwModel(context);
+
+            // Act
+            var mediator = new ManagerMediator(veiwModel.Car);
+            veiwModel.Order.Add(new OrderedStone(mediator)
+            {
+                Height = 10,
+                Width = -10,
+                Length = -10,
+                PricePerCube = -1
+            });
+
+            // Assert
+            Assert.AreEqual(0, veiwModel.Order[0].Cost);
+            Assert.AreEqual(true, System.Windows.Interop.ComponentDispatcher.IsThreadModal);
+        }
+
+        [TestMethod]
+        public void RecalculationCost_NegativeCarCost_Exception()
+        {
+            // Arrange
+            var veiwModel = new StoneVeiwModel(context);
+
+            // Act
+            veiwModel.Car.Cost = -100;
+            var mediator = new ManagerMediator(veiwModel.Car);
+            veiwModel.Order.Add(new OrderedStone(mediator)
+            {
+                Height = 10,
+                Width = 10,
+                Length = 10,
+                PricePerCube = 1
+            });
+
+            // Assert
+            Assert.AreEqual(0, veiwModel.Order[0].Cost);
+            Assert.AreEqual(true, System.Windows.Interop.ComponentDispatcher.IsThreadModal);
+        }
     }
 
     public class SqliteStoneCompanyContextTest : Stone—ompanyContext, IDisposable

@@ -69,7 +69,7 @@
                         <Button Content="Добавить" Margin="0,10,5,-7" Grid.Row="3" Command="{Binding AddStonesToWarehouseCommand}" HorizontalAlignment="Right" Grid.Column="1"/>
                     </Grid>
 
-                    <DataGrid SelectedItem="{Binding SelectedOrder}" Name="order" AutoGenerateColumns="False" Grid.Column="1" ItemsSource="{Binding Orders}"  Margin="0" CanUserAddRows="False" ColumnWidth="*" HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+                    <DataGrid SelectedItem="{Binding SelectedOrderedStone}" Name="order" AutoGenerateColumns="False" Grid.Column="1" ItemsSource="{Binding Order}"  Margin="0" CanUserAddRows="False" ColumnWidth="*" HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="№ Блока" Binding="{Binding StoneId}" IsReadOnly="True"/>
                             <DataGridTemplateColumn Header="Тип гранита" MaxWidth="200">

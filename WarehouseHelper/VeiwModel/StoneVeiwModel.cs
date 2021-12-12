@@ -1,14 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore.SqlServer;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Windows.Controls;
-using System.Windows.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace WarehouseHelper.VeiwModel
 {
@@ -16,8 +14,8 @@ namespace WarehouseHelper.VeiwModel
     {
         StoneСompanyContext db { get; set; }
         public ArrayList StoneWarehouse { get; set; } = new ArrayList();
-        public ObservableCollection<Order> Orders { get; set; } = new ObservableCollection<Order>();
-        public Order SelectedOrder { get; set; }
+        public ObservableCollection<OrderedStone> Order { get; set; } = new ObservableCollection<OrderedStone>();
+        public OrderedStone SelectedOrderedStone { get; set; }
         public Car Car { get; set; }
         public decimal CarCost
         {
@@ -41,7 +39,7 @@ namespace WarehouseHelper.VeiwModel
                 {
                     db.Cars.Add(Car);
 
-                    foreach (var order in Orders)
+                    foreach (var order in Order)
                     {
                         db.Stones.Add(new Stone()
                         {
@@ -66,7 +64,7 @@ namespace WarehouseHelper.VeiwModel
             {
                 return (changeCountRowCommand = new RelayCommand(obj =>
                 {
-                    Orders.Add(new Order(Mediator));
+                    Order.Add(new OrderedStone(Mediator));
                     Mediator.Recount();
                 }));
             }
@@ -78,7 +76,7 @@ namespace WarehouseHelper.VeiwModel
             {
                 return (changeCountRowCommand = new RelayCommand(obj =>
                 {
-                    Orders.Remove(SelectedOrder);
+                    Order.Remove(SelectedOrderedStone);
                     Mediator.Recount();
                 }));
             }
@@ -109,7 +107,7 @@ namespace WarehouseHelper.VeiwModel
         }
     }
 
-    public partial class Order : Colleague, INotifyPropertyChanged, ICloneable, IDataErrorInfo
+    public partial class OrderedStone : Colleague, INotifyPropertyChanged, ICloneable
     {
 
         private float width;
@@ -187,43 +185,21 @@ namespace WarehouseHelper.VeiwModel
                 Volume = Length * Height * Width;
         }
 
-        public Order(Mediator mediator) : base(mediator)
+        public OrderedStone(Mediator mediator) : base(mediator)
         {
             mediator.Add(this);
         }
 
         public object Clone()
         {
-            Order order = new Order(this.mediator)
+            OrderedStone orderedStone = new OrderedStone(this.mediator)
             {
                 Height = this.Height,
                 width = this.Width,
                 Length = this.Length,
                 PricePerCube = this.PricePerCube
             };
-            return order;
-        }
-
-        public string this[string columnName]
-        {
-            get
-            {
-                string error = String.Empty;
-                switch (columnName)
-                {
-                    case "Cost":
-                        if ((Cost < 0) || (Cost > 100))
-                        {
-                            error = "Возраст должен быть больше 0 и меньше 100";
-                        }
-                        break;
-                }
-                return error;
-            }
-        }
-        public string Error
-        {
-            get { throw new NotImplementedException(); }
+            return orderedStone;
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -252,12 +228,12 @@ namespace WarehouseHelper.VeiwModel
     abstract public class Mediator
     {
         public abstract void Recount();
-        public abstract void Add(Order ordere);
+        public abstract void Add(OrderedStone ordere);
     }
 
     public class ManagerMediator : Mediator
     {
-        private readonly List<Order> OrderedStones = new List<Order>();
+        private readonly List<OrderedStone> OrderedStones = new List<OrderedStone>();
         private Car Car;
         public override void Recount()
         {
@@ -278,7 +254,7 @@ namespace WarehouseHelper.VeiwModel
             }
         }
 
-        public override void Add(Order orderedStone)
+        public override void Add(OrderedStone orderedStone)
         {
             OrderedStones.Add(orderedStone);
         }
