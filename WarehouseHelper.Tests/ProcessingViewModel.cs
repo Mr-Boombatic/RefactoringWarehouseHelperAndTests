@@ -20,16 +20,16 @@ namespace WarehouseHelper.Tests
         [TestInitialize]
         public void TestInitialize()
         {
-            context = new SqliteStoneCompanyContextTest();
-
+            context = new SqliteStoneCompanyContextTest(ViewModel.ProcessingViewModel);
+            context.Slabs.ToList();
             // generate data for database by StoneViewModel
-            string relativePath = @"Database\DataForTestingProcessing.db";
-            var parentdir = Directory.GetCurrentDirectory();
-            string myString = parentdir.Replace("WarehouseHelper.Tests\\bin\\Debug\\net6.0-windows", "");
-            string absolutePath = Path.Combine(myString, relativePath);
-            string connectionString = string.Format("Data Source={0}", absolutePath);
-            context = new SqliteStoneCompanyContextTest(connectionString);
-            context.Slabs.Load();
+            //string relativePath = @"Database\DataForTestingProcessing.db";
+            //var parentdir = Directory.GetCurrentDirectory();
+            //string myString = parentdir.Replace("WarehouseHelper.Tests\\bin\\Debug\\net6.0-windows", "");
+            //string absolutePath = Path.Combine(myString, relativePath);
+            //string connectionString = string.Format("Data Source={0}", absolutePath);
+            //context = new SqliteStoneCompanyContextTest(connectionString);
+            //context.Slabs.Load();
         }
 
         [TestMethod]

@@ -70,6 +70,7 @@ namespace WarehouseHelper.VeiwModel
                     }
 
                     // saving resulted slabs and reloading DataGrid
+                    Slabs.Clear();
                     WarehouseStones.Remove(stone);
                     db.Slabs.AddRange(slabs);
                     db.SaveChanges();
@@ -154,7 +155,7 @@ namespace WarehouseHelper.VeiwModel
     public class Worker
     {
         public DateTime? Date { get; set; } = DateTime.Now.Date;
-        public TextBlock Shift { get; set; }
+        public bool? Shift { get; set; }
         public string Name { get; set; }
     }
 

@@ -57,7 +57,7 @@ namespace WarehouseHelper.Tests
 
                 viewModel.SelectedStone = context.Stones.ToList()[0];
                 viewModel.Worker = new Worker()
-                { Date = DateTime.Now, Name = "test", Shift = new TextBlock() { Text = "День" } };
+                { Date = DateTime.Now, Name = "test", Shift = true };
 
                 var slab = new Slab()
                 {
@@ -106,7 +106,7 @@ namespace WarehouseHelper.Tests
             Thread newWindowThread = new Thread(new ThreadStart(() =>
             {
                 var textOfModalDialog = (new Worker()
-                { Date = null, Name = "test", Shift = new TextBlock() { Text = "День" } }).IsValid();
+                { Date = null, Name = "test", Shift = true }).IsValid();
                 Assert.AreEqual("Не указана дата!\n", textOfModalDialog);
             }));
         }
@@ -121,7 +121,7 @@ namespace WarehouseHelper.Tests
             Thread newWindowThread = new Thread(new ThreadStart(() =>
             {
                 var textOfModalDialog = (new Worker()
-                { Date = DateTime.Now, Name = "", Shift = new TextBlock() { Text = "День" } }).IsValid();
+                { Date = DateTime.Now, Name = "", Shift = true }).IsValid();
 
                 Assert.AreEqual("Не указано имя рабочего!\n", textOfModalDialog);
             }));
