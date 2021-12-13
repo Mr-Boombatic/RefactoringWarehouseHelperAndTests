@@ -6,6 +6,7 @@ using WarehouseHelper;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
+using Microsoft.Data.SqlClient;
 using Microsoft.Data.Sqlite;
 
 namespace WarehouseHelper.Tests
@@ -34,10 +35,10 @@ namespace WarehouseHelper.Tests
         /// Cost = 100
         /// </remarks>
         [TestMethod]
-        public void RecountCost_1StoneAnd1Car_1100ReturnedCostForEach()
+        public void RecalculationCost_1StoneAnd1Car_1100ReturnedCostForEach()
         {
             // Arrange
-            var veiwModel = new StoneVeiwModel(context);
+            var veiwModel = new StoneViewModel(context);
 
             // Act
             veiwModel.Car = new Car() { Cost = 100 };
@@ -57,14 +58,14 @@ namespace WarehouseHelper.Tests
         }
 
         [TestMethod]
-        public void RecountCost_4StoneAnd1Car_1025ReturnedCostForEach()
+        public void RecalculationCost_4StoneAnd1Car_1025ReturnedCostForEach()
         {
             // Arrange
-            StoneVeiwModel veiwModel = new StoneVeiwModel(context);
+            StoneViewModel viewModel = new StoneViewModel(context);
 
             // Act
-            veiwModel.Car.Cost = 100;
-            var mediator = new ManagerMediator(veiwModel.Car);
+            viewModel.Car.Cost = 100;
+            var mediator = new ManagerMediator(viewModel.Car);
             var orderTest = new OrderedStone(mediator)
             {
                 Height = 10,
@@ -74,10 +75,10 @@ namespace WarehouseHelper.Tests
             };
 
             for (int i = 0; i < 3; i++)
-                veiwModel.Order.Add((OrderedStone)orderTest.Clone());
+                viewModel.Order.Add((OrderedStone)orderTest.Clone());
 
             // Assert
-            veiwModel.Order.ToList().ForEach(order =>
+            viewModel.Order.ToList().ForEach(order =>
             {
                 if (order.Cost != 1025)
                     Assert.Fail();
@@ -85,10 +86,10 @@ namespace WarehouseHelper.Tests
         }
 
         [TestMethod]
-        public void RecountCost_4Stone_1000ReturnedCostForEach()
+        public void RecalculationCost_4Stone_1000ReturnedCostForEach()
         {
             // Arrange
-            var veiwModel = new StoneVeiwModel(context);
+            var veiwModel = new StoneViewModel(context);
 
             // Act
             var mediator = new ManagerMediator(veiwModel.Car);
@@ -112,10 +113,10 @@ namespace WarehouseHelper.Tests
         }
 
         [TestMethod]
-        public void RecountCost_1Stone_1000ReturnedCostForEachStone()
+        public void RecalculationCost_1Stone_1000ReturnedCostForEachStone()
         {
             // Arrange
-            var veiwModel = new StoneVeiwModel(context);
+            var veiwModel = new StoneViewModel(context);
 
             // Act
             var mediator = new ManagerMediator(veiwModel.Car);
@@ -137,7 +138,7 @@ namespace WarehouseHelper.Tests
         public void RecalculationCost_NegativeVolume_Exception()
         {
             // Arrange
-            var veiwModel = new StoneVeiwModel(context);
+            var veiwModel = new StoneViewModel(context);
 
             // Act
             var mediator = new ManagerMediator(veiwModel.Car);
@@ -158,7 +159,7 @@ namespace WarehouseHelper.Tests
         public void RecalculationCost_NegativeWidthAndLength_Exception()
         {
             // Arrange
-            var veiwModel = new StoneVeiwModel(context);
+            var veiwModel = new StoneViewModel(context);
 
             // Act
             var mediator = new ManagerMediator(veiwModel.Car);
@@ -179,7 +180,7 @@ namespace WarehouseHelper.Tests
         public void RecalculationCost_NegativePricePerCube_Exception()
         {
             // Arrange
-            var veiwModel = new StoneVeiwModel(context);
+            var veiwModel = new StoneViewModel(context);
 
             // Act
             var mediator = new ManagerMediator(veiwModel.Car);
@@ -200,7 +201,7 @@ namespace WarehouseHelper.Tests
         public void RecalculationCost_NegativePricePerCubeAndParamsOfStone_Exception()
         {
             // Arrange
-            var veiwModel = new StoneVeiwModel(context);
+            var veiwModel = new StoneViewModel(context);
 
             // Act
             var mediator = new ManagerMediator(veiwModel.Car);
@@ -221,7 +222,7 @@ namespace WarehouseHelper.Tests
         public void RecalculationCost_NegativeCarCost_Exception()
         {
             // Arrange
-            var veiwModel = new StoneVeiwModel(context);
+            var veiwModel = new StoneViewModel(context);
 
             // Act
             veiwModel.Car.Cost = -100;
@@ -251,6 +252,15 @@ namespace WarehouseHelper.Tests
             Seed();
         }
 
+        public SqliteStoneCompanyContextTest(string connection)
+            : base(
+                new DbContextOptionsBuilder<Stone—ompanyContext>()
+                    .UseSqlite(new SqliteConnection(connection))
+                    .Options)
+        {
+        }
+
+
         private void Seed()
         {
             using (var context = new Stone—ompanyContext(ContextOptions))
@@ -269,6 +279,7 @@ namespace WarehouseHelper.Tests
             var connection = new SqliteConnection("Filename=:memory:");
 
             connection.Open();
+
 
             return connection;
         }

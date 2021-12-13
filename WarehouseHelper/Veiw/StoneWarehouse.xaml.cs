@@ -25,7 +25,7 @@ namespace WarehouseHelper.Veiw
         public StoneWarehouse(StoneСompanyContext context)
         {
             InitializeComponent();
-            DataContext = new StoneVeiwModel(context);
+            DataContext = new StoneViewModel(context);
         }
 
         private static bool IsTextAllowed(string text)

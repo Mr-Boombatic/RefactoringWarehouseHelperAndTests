@@ -33,17 +33,18 @@ namespace WarehouseHelper.VeiwModel
                     var stone = db.Stones.Where(s => s.StoneId == SelectedStone.StoneId).First();
                     stone.IsSawn = true;
                     double overallVolume = 0;
+                    string exception = null;
+
+                    if (!string.IsNullOrEmpty(exception = Worker.IsValid()))
+                    {
+                        MessageBox.Show(exception, "Распил", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
 
                     // forming resulted slabs
                     List<Slab> slabs = new List<Slab>();
                     foreach (var slab in Slabs)
                     {
-                        if (Worker.IsValid())
-                        {
-                            MessageBox.Show("Не указан работник!", "Распил", MessageBoxButton.OK, MessageBoxImage.Error);
-                            return;
-                        }
-
                         for (int i = 1; i <= slab.Count; i++)
                         {
                             totalCount++;
@@ -62,10 +63,9 @@ namespace WarehouseHelper.VeiwModel
                         overallVolume += slab.Width * slab.Length * slab.Height * slab.Count;
                     }
 
-                    string text;
-                    if ((text = overallVolume.VerificationOverallVolume(stone.Length * stone.Width * stone.Height)) != "OK")
+                    if (!string.IsNullOrEmpty((exception = overallVolume.IsValidOverallVolume(stone.Length * stone.Width * stone.Height))))
                     {
-                        MessageBox.Show(text, "Распил", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show(exception, "Распил", MessageBoxButton.OK, MessageBoxImage.Error);
                         return;
                     }
 
@@ -121,30 +121,39 @@ namespace WarehouseHelper.VeiwModel
 
     public static class ExtensionsDouble
     {
-        public static string VerificationOverallVolume(this double overralVolume, double stoneVolume)
+        public static string IsValidOverallVolume(this double overralVolume, double stoneVolume)
         {
+            string exception = null;
             if (overralVolume < 0)
-                return "Обьем для слэбов не может быть отрицательным!";
+                exception += "Обьем для слэбов не может быть отрицательным!\n";
             if (stoneVolume < 0)
-                return "Обьем для камня не может быть отрицательным!";
+                exception += "Обьем для камня не может быть отрицательным!\n";
             if (overralVolume > stoneVolume)
-                return "Обьем для слэбов не может быть больше обьема камня!";
+                exception += "Обьем для слэбов не может быть больше обьема камня!\n";
 
-            return "OK";
+            return exception;
         }
     }
 
     public static class ExtensionsWorker
     {
-        public static bool IsValid(this Worker worker)
+        public static string IsValid(this Worker worker)
         {
-            return worker.Date != null && !string.IsNullOrEmpty(worker.Name) && !string.IsNullOrEmpty(worker.Shift.Text);
+            string exception = null;
+            if (worker.Date == null)
+                exception += "Не указана дата!\n";
+            if (string.IsNullOrEmpty(worker.Name))
+                exception += "Не указано имя рабочего!\n";
+            //if (worker.Shift == null || string.IsNullOrEmpty(worker.Shift.Text))
+               // exception += "Не указана смена рабочего!\n";
+
+            return exception;
         }
     }
 
     public class Worker
     {
-        public DateTime Date { get; set; } = DateTime.Now.Date;
+        public DateTime? Date { get; set; } = DateTime.Now.Date;
         public TextBlock Shift { get; set; }
         public string Name { get; set; }
     }

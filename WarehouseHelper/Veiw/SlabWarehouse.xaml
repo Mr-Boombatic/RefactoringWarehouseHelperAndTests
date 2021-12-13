@@ -70,7 +70,7 @@
                         <TextBox Text="{Binding Worker.Name}" FontSize="14" VerticalAlignment="Center" Width="120" HorizontalAlignment="Left"  Grid.Row="2" Grid.Column="1"/>
 
 
-                        <DataGrid Grid.Row="3" Grid.ColumnSpan="2" Height="auto" Width="auto" ItemsSource="{Binding SawingStone}" VerticalAlignment="Stretch" ColumnWidth="*" AutoGenerateColumns="False" HorizontalAlignment="Stretch" Margin="10" >
+                        <DataGrid Grid.Row="3" Grid.ColumnSpan="2" Height="auto" Width="auto" ItemsSource="{Binding Slabs}" VerticalAlignment="Stretch" ColumnWidth="*" AutoGenerateColumns="False" HorizontalAlignment="Stretch" Margin="10" >
                             <DataGrid.Columns>
                                 <DataGridTextColumn  Header="Д" Binding="{Binding Path=Length}" Width="*"  />
                                 <DataGridTextColumn  Header="Ш" Binding="{Binding Path=Width}"  Width="*"  />

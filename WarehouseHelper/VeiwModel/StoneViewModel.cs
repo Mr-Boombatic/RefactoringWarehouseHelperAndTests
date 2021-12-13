@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace WarehouseHelper.VeiwModel
 {
-    public class StoneVeiwModel
+    public class StoneViewModel
     {
         StoneСompanyContext db { get; set; }
         public ArrayList StoneWarehouse { get; set; } = new ArrayList();
@@ -82,7 +82,7 @@ namespace WarehouseHelper.VeiwModel
             }
         }
 
-        public StoneVeiwModel(StoneСompanyContext context)
+        public StoneViewModel(StoneСompanyContext context)
         {
             db = context;
             db.Stones.Load();
