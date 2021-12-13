@@ -9,7 +9,7 @@ using System.Windows.Controls;
 
 namespace WarehouseHelper.VeiwModel
 {
-    class ProcessingVeiwModel
+    public class ProcessingVeiwModel
     {
         StoneСompanyContext db;
         public ArrayList ProcessingSlabs { get; set; } = new ArrayList();

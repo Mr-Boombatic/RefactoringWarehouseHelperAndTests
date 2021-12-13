@@ -7,7 +7,7 @@ using System.Text;
 
 namespace WarehouseHelper.VeiwModel
 {
-    class TradeVeiwModel
+    public class TradeVeiwModel
     {
         StoneСompanyContext db;
         public ObservableCollection<PreviewProduct> ProductSold { get; set; } = new ObservableCollection<PreviewProduct>();
@@ -63,9 +63,9 @@ namespace WarehouseHelper.VeiwModel
             }
         }
 
-        public TradeVeiwModel()
+        public TradeVeiwModel(StoneСompanyContext context)
         {
-            //db = new StoneСompanyContext();
+            db = context;
             db.Products.Load();
             db.Sales.Load();
             Sales = db.Sales.Local.ToObservableCollection();
@@ -83,7 +83,7 @@ namespace WarehouseHelper.VeiwModel
         }
     }
 
-    class PreviewProduct
+    public class PreviewProduct : Product
     {
         public string Name { get; set; }
         public string SlabId { get; set; }

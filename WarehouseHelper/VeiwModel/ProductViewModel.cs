@@ -8,7 +8,7 @@ using System.Text;
 
 namespace WarehouseHelper.VeiwModel
 {
-    class ProductVeiwModel
+    public class ProductViewModel
     {
         StoneСompanyContext db;
         public ArrayList PreviewProductWarehouse { get; set; } = new ArrayList();
@@ -42,9 +42,9 @@ namespace WarehouseHelper.VeiwModel
             }
         }
 
-        public ProductVeiwModel()
+        public ProductViewModel(StoneСompanyContext context)
         {
-           // db = new StoneСompanyContext();
+            db = context;
             db.Products.Load();
             db.Slabs.Load();
             db.Stones.Load();

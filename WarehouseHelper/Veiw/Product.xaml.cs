@@ -19,10 +19,10 @@ namespace WarehouseHelper.Veiw
     /// </summary>
     public partial class Product : UserControl
     {
-        public Product()
+        public Product(StoneСompanyContext context)
         {
             InitializeComponent();
-            DataContext = new ProductVeiwModel();
+            DataContext = new ProductViewModel(context);
         }
     }
 }

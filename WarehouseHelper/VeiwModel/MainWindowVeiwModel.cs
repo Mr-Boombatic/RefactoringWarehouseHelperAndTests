@@ -28,7 +28,7 @@ namespace WarehouseHelper.VeiwModel
         }
 
         DbContextOptions<StoneСompanyContext> Options { get; set; } = new DbContextOptionsBuilder<StoneСompanyContext>()
-            .UseSqlServer(@"Server=DESKTOP-GJHHNV9\SQLEXPRESS;Database=StoneСompany;Trusted_Connection=True;")
+            .UseSqlServer(@"Server=DESKTOP-8UCPGM6;Database=StoneСompany;Trusted_Connection=True;")
             .Options;
 
         private RelayCommand selectedVeiw;
@@ -59,35 +59,32 @@ namespace WarehouseHelper.VeiwModel
             {
                 return (selectedVeiw = new RelayCommand(obj =>
                 {
-                    using (var context = new StoneСompanyContext(Options))
-                    {
-                        SelectedWarehouse = new ProcessingSlabWarehouse(context);
-                    }
+                        SelectedWarehouse = new ProcessingSlabWarehouse(new StoneСompanyContext(Options));
                 }));
             }
         }
 
-        //public RelayCommand SelectProductWarehouseCommand
-        //{
-        //    get
-        //    {
-        //        return (selectedVeiw = new RelayCommand(obj =>
-        //        {
-        //            SelectedWarehouse = new Veiw.Product();
-        //        }));
-        //    }
-        //}
+        public RelayCommand SelectProductWarehouseCommand
+        {
+            get
+            {
+                return (selectedVeiw = new RelayCommand(obj =>
+                {
+                    SelectedWarehouse = new WarehouseHelper.Veiw.Product(new StoneСompanyContext(Options));
+                }));
+            }
+        }
 
-        //public RelayCommand SellCommand
-        //{
-        //    get
-        //    {
-        //        return (selectedVeiw = new RelayCommand(obj =>
-        //        {
-        //            SelectedWarehouse = new Trade();
-        //        }));
-        //    }
-        //}
+        public RelayCommand SellCommand
+        {
+            get
+            {
+                return (selectedVeiw = new RelayCommand(obj =>
+                {
+                    SelectedWarehouse = new Trade(new StoneСompanyContext(Options));
+                }));
+            }
+        }
 
         public MainWindowVeiwModel()
         {

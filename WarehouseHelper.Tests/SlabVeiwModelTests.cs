@@ -47,7 +47,6 @@ namespace WarehouseHelper.Tests
         }
 
         // Intagration tests
-        SqliteConnection source = new SqliteConnection("Data Source=c:\\test.db");
         [TestMethod]
         public void AddSlabsCommand_SlabForSaving_SavedData()
         {
@@ -75,7 +74,6 @@ namespace WarehouseHelper.Tests
                 viewModel.AddSlabsCommand.Execute(null);
                 context.SaveChanges();
                 Assert.AreEqual(6, context.Slabs.Count());
-                context.Dispose();
             }));
 
             newWindowThread.SetApartmentState(ApartmentState.STA);

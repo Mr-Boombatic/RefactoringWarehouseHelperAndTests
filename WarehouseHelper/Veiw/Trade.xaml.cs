@@ -19,10 +19,10 @@ namespace WarehouseHelper.Veiw
     /// </summary>
     public partial class Trade : UserControl
     {
-        public Trade()
+        public Trade(StoneСompanyContext context)
         {
             InitializeComponent();
-            DataContext = new TradeVeiwModel();
+            DataContext = new TradeVeiwModel(context);
         }
     }
 }

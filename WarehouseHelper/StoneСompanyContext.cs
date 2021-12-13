@@ -10,7 +10,7 @@ namespace WarehouseHelper
         public StoneСompanyContext(DbContextOptions<StoneСompanyContext> contextOptions) : base(contextOptions)
         {
             ContextOptions = contextOptions;
-            //this.Database.EnsureCreated();
+            this.Database.EnsureCreated();
         }
 
        protected DbContextOptions<StoneСompanyContext> ContextOptions { get; }
